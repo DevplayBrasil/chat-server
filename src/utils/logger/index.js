@@ -42,4 +42,10 @@ const logger = winston.createLogger({
   ],
 });
 
-module.exports = logger;
+const loggerStream = {
+  write(info) {
+    logger.http(info);
+  },
+};
+
+module.exports = { logger, loggerStream };

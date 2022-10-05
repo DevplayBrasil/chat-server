@@ -8,17 +8,31 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  name      String
-  email     String     @unique
-  password  String
-  imageUrl  String?
-  messages  Message[]
-  rooms     UserRoom[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  password     String
+  imageUrl     String?
+  status       UserStatus    @default(PENDING)
+  messages     Message[]
+  rooms        UserRoom[]
+  confirmCodes ConfirmCode[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("users")
+}
+
+model ConfirmCode {
+  id        Int               @id @default(autoincrement())
+  code      String
+  userId    Int
+  status    ConfirmCodeStatus @default(PENDING)
+  user      User              @relation(fields: [userId], references: [id])
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@map("confirm_code")
 }
 
 model UserRoom {
@@ -56,4 +70,19 @@ model Message {
   updatedAt DateTime @updatedAt
 
   @@map("messages")
+}
+
+enum ConfirmCodeStatus {
+  PENDING
+  USED
+  EXPIRED
+
+  @@map("confirm_code_status")
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+
+  @@map("user_status")
 }

@@ -1,6 +1,6 @@
 const prisma = require('../../utils/database');
-const { v4 } = require('uuid');
 const MessagesServices = require('../messages/messagesServices');
+const createCode = require('../../utils/createCode');
 
 const RoomsServices = {
   async findAll() {
@@ -17,7 +17,7 @@ const RoomsServices = {
   },
 
   async create(data) {
-    const code = v4().split('-')[0];
+    const code = createCode().withLetters().withNumbers().create();
     const room = await prisma.room.create({
       data: {
         code,

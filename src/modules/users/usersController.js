@@ -25,6 +25,25 @@ const UsersController = {
     const user = await UsersServices.delete(Number(params.id));
     return res.json(user);
   },
+
+  async register({ body }, res) {
+    try {
+      const { user, code } = await UsersServices.register(body);
+      console.log(code);
+      return res.json(user);
+    } catch (error) {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
+  },
+
+  async confirmRegister({ body }, res) {
+    try {
+      const user = await UsersServices.confirmRegister(body.email, body.code);
+      return res.json(user);
+    } catch (error) {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
+  },
 };
 
 module.exports = UsersController;

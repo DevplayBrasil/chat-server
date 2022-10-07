@@ -29,7 +29,7 @@ const UsersController = {
   async register({ body }, res) {
     try {
       const { user, code } = await UsersServices.register(body);
-      console.log(code);
+      UsersServices.sendConfirmRegisterMail({ name: user.name, code });
       return res.json(user);
     } catch (error) {
       return res.status(400).json({ success: false, msg: error.message });

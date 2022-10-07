@@ -1,6 +1,7 @@
 const { UserStatus, ConfirmCodeStatus } = require('@prisma/client');
 const createCode = require('../../utils/createCode');
 const prisma = require('../../utils/database');
+const MailService = require('../../utils/mail');
 
 const UsersServices = {
   async findAll() {
@@ -101,6 +102,14 @@ const UsersServices = {
       data: { status: UserStatus.ACTIVE },
     });
     return user;
+  },
+
+  async sendConfirmRegisterMail(data) {
+    const html = MailService.template('register', {
+      name: data.name,
+      code: data.code,
+    });
+    MailService.sendMail(data.email, 'Confirmação do Registro!', html);
   },
 };
 

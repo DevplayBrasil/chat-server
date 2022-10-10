@@ -12,7 +12,7 @@ model User {
   name                String
   email               String               @unique
   password            String
-  imageUrl            String?
+  avatar              String?
   status              UserStatus           @default(PENDING)
   messages            Message[]
   rooms               UserRoom[]

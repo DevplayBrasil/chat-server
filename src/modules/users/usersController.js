@@ -1,3 +1,4 @@
+const { getFullUrl } = require('../../utils/general');
 const UsersServices = require('./usersServices');
 
 const UsersController = {
@@ -94,6 +95,18 @@ const UsersController = {
   async updatePassword({ params, body }, res) {
     try {
       const user = await UsersServices.updatePassword(Number(params.id), body);
+      return res.json(user);
+    } catch (error) {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
+  },
+
+  async updateAvatar(req, res) {
+    try {
+      const avatar = getFullUrl(req, `/public/${req.file.filename}`);
+      const user = await UsersServices.update(Number(req.params.id), {
+        avatar,
+      });
       return res.json(user);
     } catch (error) {
       return res.status(400).json({ success: false, msg: error.message });

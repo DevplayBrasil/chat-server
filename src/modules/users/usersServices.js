@@ -50,6 +50,7 @@ const UsersServices = {
         name: data.name,
         email: data.email,
         password: data.password,
+        avatar: data.avatar,
       },
     });
 

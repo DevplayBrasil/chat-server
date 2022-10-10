@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const UsersController = require('../modules/users/usersController');
+const upload = require('../utils/upload');
 
 const router = Router();
 
@@ -10,6 +11,11 @@ router.post('/login', UsersController.login);
 router.post('/forget-password', UsersController.forgetPassword);
 router.post('/reset-password', UsersController.resetPassword);
 router.put('/:id/password', UsersController.updatePassword);
+router.put(
+  '/:id/avatar',
+  upload.single('avatar'),
+  UsersController.updateAvatar
+);
 
 router.get('/', UsersController.findAll);
 router.get('/:id', UsersController.findOne);

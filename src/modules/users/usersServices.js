@@ -1,4 +1,5 @@
 const { UserStatus, ConfirmCodeStatus } = require('@prisma/client');
+const AuthService = require('../../utils/auth');
 const createCode = require('../../utils/createCode');
 const prisma = require('../../utils/database');
 const MailService = require('../../utils/mail');
@@ -110,6 +111,24 @@ const UsersServices = {
       code: data.code,
     });
     MailService.sendMail(data.email, 'Confirmação do Registro!', html);
+  },
+
+  async login(data) {
+    const user = await UsersServices.findByEmail(data.email);
+
+    if (!user) throw new Error('E-mail não encontrado!');
+    if (user.status !== UserStatus.ACTIVE) throw new Error('Usuário inválido');
+    if (user.password !== data.password) throw new Error('Senha incorreta!');
+
+    const token = AuthService.createToken({ id: user.id });
+    return { user, token };
+  },
+
+  async findByToken(token) {
+    const payload = AuthService.verifyToken(token);
+    if (!payload || !payload.id) throw new Error('Token inválido!');
+    const user = await UsersServices.findOne(payload.id);
+    return user;
   },
 };
 

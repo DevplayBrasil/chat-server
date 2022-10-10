@@ -44,6 +44,15 @@ const UsersController = {
       return res.status(400).json({ success: false, msg: error.message });
     }
   },
+
+  async login({ body }, res) {
+    try {
+      const { user, token } = await UsersServices.login(body);
+      return res.json({ user, token });
+    } catch (error) {
+      return res.status(400).json({ success: false, msg: error.message });
+    }
+  },
 };
 
 module.exports = UsersController;
